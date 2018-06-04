@@ -5,68 +5,198 @@ import {
   View,
   Dimensions,
   TouchableOpacity,
-  Alert,
+  Button,
 } from 'react-native'
 
 let DeviceWidth = Dimensions.get('window').width
 
 export default class App extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      nextTurn: 'X',
+      gridData: [
+        {
+          position: 1,
+          value: null,
+          style: { marginBottom: 2 },
+          addMove: this.addMove.bind(this),
+        },
+        {
+          position: 2,
+          value: null,
+          style: { marginBottom: 2 },
+          addMove: this.addMove.bind(this),
+        },
+        {
+          position: 3,
+          value: null,
+          addMove: this.addMove.bind(this),
+        },
+        {
+          position: 4,
+          value: null,
+          style: { marginBottom: 2, marginLeft: 2 },
+          addMove: this.addMove.bind(this),
+        },
+        {
+          position: 5,
+          value: null,
+          style: { marginBottom: 2, marginLeft: 2 },
+          addMove: this.addMove.bind(this),
+        },
+        {
+          position: 6,
+          value: null,
+          style: { marginLeft: 2 },
+          addMove: this.addMove.bind(this),
+        },
+        {
+          position: 7,
+          value: null,
+          style: { marginBottom: 2, marginLeft: 2 },
+          addMove: this.addMove.bind(this),
+        },
+        {
+          position: 8,
+          value: null,
+          style: { marginBottom: 2, marginLeft: 2 },
+          addMove: this.addMove.bind(this),
+        },
+        {
+          position: 9,
+          value: null,
+          style: { marginLeft: 2 },
+          addMove: this.addMove.bind(this),
+        },
+      ],
+    }
+  }
+
+  addMove(index) {
+    // this.setState({gridData[index].value : this.state.nextTurn})
+    let gridData = this.state.gridData
+    let item = gridData[index]
+    item.value = this.state.nextTurn
+    this.setState({
+      gridData: gridData,
+      nextTurn: this.state.nextTurn === 'X' ? 'O' : 'X',
+    })
+  }
+
+  restartGame() {
+    this.setState({
+      gridData: [
+        {
+          position: 1,
+          value: null,
+          style: { marginBottom: 2 },
+          addMove: this.addMove.bind(this),
+        },
+        {
+          position: 2,
+          value: null,
+          style: { marginBottom: 2 },
+          addMove: this.addMove.bind(this),
+        },
+        {
+          position: 3,
+          value: null,
+          addMove: this.addMove.bind(this),
+        },
+        {
+          position: 4,
+          value: null,
+          style: { marginBottom: 2, marginLeft: 2 },
+          addMove: this.addMove.bind(this),
+        },
+        {
+          position: 5,
+          value: null,
+          style: { marginBottom: 2, marginLeft: 2 },
+          addMove: this.addMove.bind(this),
+        },
+        {
+          position: 6,
+          value: null,
+          style: { marginLeft: 2 },
+          addMove: this.addMove.bind(this),
+        },
+        {
+          position: 7,
+          value: null,
+          style: { marginBottom: 2, marginLeft: 2 },
+          addMove: this.addMove.bind(this),
+        },
+        {
+          position: 8,
+          value: null,
+          style: { marginBottom: 2, marginLeft: 2 },
+          addMove: this.addMove.bind(this),
+        },
+        {
+          position: 9,
+          value: null,
+          style: { marginLeft: 2 },
+          addMove: this.addMove.bind(this),
+        },
+      ],
+    })
+  }
+
   renderBoard() {
-    let arr = new Array(9)
     let DeviceWidth = Dimensions.get('window').width
     return (
       <View style={styles.grid}>
         <View>
-          <GridItem position={1} value={'O'} style={{ marginBottom: 2 }} />
-          <GridItem position={2} value={'X'} style={{ marginBottom: 2 }} />
-          <GridItem position={3} value={null} style={styles.item} />
+          <GridItem state={this.state.gridData[0]} index={0} />
+          <GridItem state={this.state.gridData[1]} index={1} />
+          <GridItem state={this.state.gridData[2]} index={2} />
         </View>
         <View>
-          <GridItem
-            position={4}
-            value={null}
-            style={{ marginBottom: 2, marginLeft: 2 }}
-          />
-          <GridItem
-            position={5}
-            value={null}
-            style={{ marginBottom: 2, marginLeft: 2 }}
-          />
-          <GridItem position={6} value={null} style={{ marginLeft: 2 }} />
+          <GridItem state={this.state.gridData[3]} index={3} />
+          <GridItem state={this.state.gridData[4]} index={4} />
+          <GridItem state={this.state.gridData[5]} index={5} />
         </View>
         <View>
-          <GridItem
-            position={7}
-            value={null}
-            style={{ marginBottom: 2, marginLeft: 2 }}
-          />
-          <GridItem
-            position={8}
-            value={null}
-            style={{ marginBottom: 2, marginLeft: 2 }}
-          />
-          <GridItem position={9} value={null} style={{ marginLeft: 2 }} />
+          <GridItem state={this.state.gridData[6]} index={6} />
+          <GridItem state={this.state.gridData[7]} index={7} />
+          <GridItem state={this.state.gridData[8]} index={8} />
         </View>
       </View>
     )
   }
   render() {
-    return <View style={styles.container}>{this.renderBoard()}</View>
+    return (
+      <View style={styles.container}>
+        <Text style={[styles.text, { marginBottom: 30 }]}>
+          Next Turn: {this.state.nextTurn}
+        </Text>
+        {this.renderBoard()}
+        <View style={styles.button}>
+          <Button
+            title="Restart Game"
+            color="white"
+            onPress={() => this.restartGame()}
+          />
+        </View>
+      </View>
+    )
   }
 }
 
 class GridItem extends React.Component {
   addMove() {
-    return null
+    this.props.state.value ? null : this.props.state.addMove(this.props.index)
   }
 
   render() {
     return (
       <TouchableOpacity
-        style={[styles.item, this.props.style]}
-        onPress={() => this.addMove.bind(this)}
+        style={[styles.item, this.props.state.style]}
+        onPress={() => this.addMove()}
       >
-        <Text style={styles.text}>{this.props.value}</Text>
+        <Text style={styles.text}>{this.props.state.value}</Text>
       </TouchableOpacity>
     )
   }
@@ -93,5 +223,8 @@ const styles = StyleSheet.create({
     color: 'white',
     alignSelf: 'center',
     fontSize: 40,
+  },
+  button: {
+    marginVertical: 25,
   },
 })
