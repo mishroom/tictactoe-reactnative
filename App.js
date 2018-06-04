@@ -78,6 +78,34 @@ export default class App extends React.Component {
     let gridData = this.state.gridData
     let item = gridData[index]
     item.value = this.state.nextTurn
+
+    console.log(index % 3)
+    //checkWinner
+    //checkVertical
+    if (index % 3 === 0) {
+      if (
+        item.value === gridData[index + 1].value &&
+        gridData[index + 2].value === gridData[index + 1].value
+      ) {
+        this.restartGame()
+      }
+    }
+    if (index % 3 === 1) {
+      if (
+        item.value === gridData[index + 1].value &&
+        gridData[index - 1].value === gridData[index + 1].value
+      ) {
+        this.restartGame()
+      }
+    }
+    if (index % 3 === 2) {
+      if (
+        item.value === gridData[index - 1].value &&
+        gridData[index - 2].value === gridData[index - 1].value
+      ) {
+        this.restartGame()
+      }
+    }
     this.setState({
       gridData: gridData,
       nextTurn: this.state.nextTurn === 'X' ? 'O' : 'X',
@@ -169,7 +197,7 @@ export default class App extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text style={[styles.text, { marginBottom: 30 }]}>
+        <Text style={[styles.text, { marginVertical: 30 }]}>
           Next Turn: {this.state.nextTurn}
         </Text>
         {this.renderBoard()}
