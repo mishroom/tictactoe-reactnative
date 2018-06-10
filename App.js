@@ -85,7 +85,7 @@ export default class App extends React.Component {
       gridData: gridData,
       nextTurn: this.state.nextTurn === 'X' ? 'O' : 'X',
     })
-    console.log(index)
+    console.log(index, item.value)
     //checkWinner
 
     //horizontal and vertical
@@ -127,6 +127,24 @@ export default class App extends React.Component {
       if (
         gridData[2].value === gridData[5].value &&
         gridData[5].value === gridData[8].value
+      ) {
+        this.setState({ gameState: 'win', winner: item.value })
+      }
+    }
+
+    //check diagonal
+    if (index % 2 === 0) {
+      if (
+        item.value === gridData[0].value &&
+        gridData[0].value === gridData[4].value &&
+        gridData[4].value === gridData[8].value
+      ) {
+        this.setState({ gameState: 'win', winner: item.value })
+      }
+      if (
+        item.value === gridData[2].value &&
+        gridData[2].value === gridData[4].value &&
+        gridData[4].value === gridData[6].value
       ) {
         this.setState({ gameState: 'win', winner: item.value })
       }
