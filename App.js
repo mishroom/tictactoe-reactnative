@@ -17,6 +17,7 @@ export default class App extends React.Component {
     this.state = {
       nextTurn: 'X',
       gameState: 'play',
+      winner: null,
       gridData: [
         {
           position: 1,
@@ -84,15 +85,22 @@ export default class App extends React.Component {
       gridData: gridData,
       nextTurn: this.state.nextTurn === 'X' ? 'O' : 'X',
     })
-
+    console.log(index)
     //checkWinner
-    //checkVertical
+
+    //horizontal and vertical
     if (index % 3 === 0) {
       if (
         item.value === gridData[index + 1].value &&
         gridData[index + 2].value === gridData[index + 1].value
       ) {
-        this.setState({ gameState: 'win' })
+        this.setState({ gameState: 'win', winner: item.value })
+      }
+      if (
+        gridData[0].value === gridData[3].value &&
+        gridData[3].value === gridData[6].value
+      ) {
+        this.setState({ gameState: 'win', winner: item.value })
       }
     }
     if (index % 3 === 1) {
@@ -100,7 +108,13 @@ export default class App extends React.Component {
         item.value === gridData[index + 1].value &&
         gridData[index - 1].value === gridData[index + 1].value
       ) {
-        this.setState({ gameState: 'win' })
+        this.setState({ gameState: 'win', winner: item.value })
+      }
+      if (
+        gridData[1].value === gridData[4].value &&
+        gridData[4].value === gridData[7].value
+      ) {
+        this.setState({ gameState: 'win', winner: item.value })
       }
     }
     if (index % 3 === 2) {
@@ -108,7 +122,13 @@ export default class App extends React.Component {
         item.value === gridData[index - 1].value &&
         gridData[index - 2].value === gridData[index - 1].value
       ) {
-        this.setState({ gameState: 'win' })
+        this.setState({ gameState: 'win', winner: item.value })
+      }
+      if (
+        gridData[2].value === gridData[5].value &&
+        gridData[5].value === gridData[8].value
+      ) {
+        this.setState({ gameState: 'win', winner: item.value })
       }
     }
   }
@@ -171,6 +191,7 @@ export default class App extends React.Component {
         },
       ],
       gameState: 'play',
+      winner: null,
     })
   }
 
@@ -205,8 +226,10 @@ export default class App extends React.Component {
   renderWinner() {
     return (
       <View>
-        <Text style={[styles.text, { marginVertical: 30 }]}>
-          CONGRATS YOU WON WAOW
+        <Text
+          style={[styles.text, { marginVertical: 30, textAlign: 'center' }]}
+        >
+          {this.state.winner} wins! Congratulations!
         </Text>
       </View>
     )
