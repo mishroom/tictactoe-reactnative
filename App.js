@@ -16,8 +16,9 @@ export default class App extends React.Component {
     super(props)
     this.state = {
       nextTurn: 'X',
-      gameState: 'play',
+      gameState: 'intro',
       winner: null,
+      mode: null,
       gridData: [
         {
           position: 1,
@@ -85,9 +86,7 @@ export default class App extends React.Component {
       gridData: gridData,
       nextTurn: this.state.nextTurn === 'X' ? 'O' : 'X',
     })
-    console.log(index, item.value)
     //checkWinner
-
     //horizontal and vertical
     if (index % 3 === 0) {
       if (
@@ -213,6 +212,24 @@ export default class App extends React.Component {
     })
   }
 
+  renderIntro() {
+    return (
+      <View>
+        <Text style={[styles.text, { marginVertical: 30 }]}>INTRO</Text>
+        <Button
+          title="Single Player"
+          color="white"
+          onPress={() => this.setState({ mode: 'single', gameState: 'play' })}
+        />
+        <Button
+          title="Multi Player"
+          color="white"
+          onPress={() => this.setState({ mode: 'multi', gameState: 'play' })}
+        />
+      </View>
+    )
+  }
+
   renderBoard() {
     let DeviceWidth = Dimensions.get('window').width
     return (
@@ -256,15 +273,29 @@ export default class App extends React.Component {
   render() {
     return (
       <View style={styles.container}>
+        {this.state.gameState === 'intro' && this.renderIntro()}
         {this.state.gameState === 'play' && this.renderBoard()}
         {this.state.gameState === 'win' && this.renderWinner()}
-        <View style={styles.button}>
-          <Button
-            title="Restart Game"
+        {this.state.gameState !== 'intro' && (
+          <View style={styles.button}>
+            <Button
+              title="Restart Game"
+              color="white"
+              onPress={() => this.restartGame()}
+            />
+            <Button
+              title="Single Player"
+              color="white"
+              onPress={() => this.restartGame()}
+            />
+
+            {/* <Button
+            title="MultiPlayer"
             color="white"
             onPress={() => this.restartGame()}
-          />
-        </View>
+          /> */}
+          </View>
+        )}
       </View>
     )
   }
