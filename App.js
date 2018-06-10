@@ -6,6 +6,7 @@ import {
   Dimensions,
   TouchableOpacity,
   Button,
+  Modal,
 } from 'react-native'
 
 let DeviceWidth = Dimensions.get('window').width
@@ -15,6 +16,7 @@ export default class App extends React.Component {
     super(props)
     this.state = {
       nextTurn: 'X',
+      gameState: 'play',
       gridData: [
         {
           position: 1,
@@ -78,8 +80,11 @@ export default class App extends React.Component {
     let gridData = this.state.gridData
     let item = gridData[index]
     item.value = this.state.nextTurn
+    this.setState({
+      gridData: gridData,
+      nextTurn: this.state.nextTurn === 'X' ? 'O' : 'X',
+    })
 
-    console.log(index % 3)
     //checkWinner
     //checkVertical
     if (index % 3 === 0) {
@@ -87,7 +92,7 @@ export default class App extends React.Component {
         item.value === gridData[index + 1].value &&
         gridData[index + 2].value === gridData[index + 1].value
       ) {
-        this.restartGame()
+        this.setState({ gameState: 'win' })
       }
     }
     if (index % 3 === 1) {
@@ -95,7 +100,7 @@ export default class App extends React.Component {
         item.value === gridData[index + 1].value &&
         gridData[index - 1].value === gridData[index + 1].value
       ) {
-        this.restartGame()
+        this.setState({ gameState: 'win' })
       }
     }
     if (index % 3 === 2) {
@@ -103,13 +108,9 @@ export default class App extends React.Component {
         item.value === gridData[index - 1].value &&
         gridData[index - 2].value === gridData[index - 1].value
       ) {
-        this.restartGame()
+        this.setState({ gameState: 'win' })
       }
     }
-    this.setState({
-      gridData: gridData,
-      nextTurn: this.state.nextTurn === 'X' ? 'O' : 'X',
-    })
   }
 
   restartGame() {
@@ -169,38 +170,53 @@ export default class App extends React.Component {
           addMove: this.addMove.bind(this),
         },
       ],
+      gameState: 'play',
     })
   }
 
   renderBoard() {
     let DeviceWidth = Dimensions.get('window').width
     return (
-      <View style={styles.grid}>
-        <View>
-          <GridItem state={this.state.gridData[0]} index={0} />
-          <GridItem state={this.state.gridData[1]} index={1} />
-          <GridItem state={this.state.gridData[2]} index={2} />
-        </View>
-        <View>
-          <GridItem state={this.state.gridData[3]} index={3} />
-          <GridItem state={this.state.gridData[4]} index={4} />
-          <GridItem state={this.state.gridData[5]} index={5} />
-        </View>
-        <View>
-          <GridItem state={this.state.gridData[6]} index={6} />
-          <GridItem state={this.state.gridData[7]} index={7} />
-          <GridItem state={this.state.gridData[8]} index={8} />
+      <View>
+        <Text style={[styles.text, { marginVertical: 30 }]}>
+          Next Turn: {this.state.nextTurn}
+        </Text>
+        <View style={styles.grid}>
+          <View>
+            <GridItem state={this.state.gridData[0]} index={0} />
+            <GridItem state={this.state.gridData[1]} index={1} />
+            <GridItem state={this.state.gridData[2]} index={2} />
+          </View>
+          <View>
+            <GridItem state={this.state.gridData[3]} index={3} />
+            <GridItem state={this.state.gridData[4]} index={4} />
+            <GridItem state={this.state.gridData[5]} index={5} />
+          </View>
+          <View>
+            <GridItem state={this.state.gridData[6]} index={6} />
+            <GridItem state={this.state.gridData[7]} index={7} />
+            <GridItem state={this.state.gridData[8]} index={8} />
+          </View>
         </View>
       </View>
     )
   }
+
+  renderWinner() {
+    return (
+      <View>
+        <Text style={[styles.text, { marginVertical: 30 }]}>
+          CONGRATS YOU WON WAOW
+        </Text>
+      </View>
+    )
+  }
+
   render() {
     return (
       <View style={styles.container}>
-        <Text style={[styles.text, { marginVertical: 30 }]}>
-          Next Turn: {this.state.nextTurn}
-        </Text>
-        {this.renderBoard()}
+        {this.state.gameState === 'play' && this.renderBoard()}
+        {this.state.gameState === 'win' && this.renderWinner()}
         <View style={styles.button}>
           <Button
             title="Restart Game"
